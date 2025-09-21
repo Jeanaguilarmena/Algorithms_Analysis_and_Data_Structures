@@ -37,7 +37,7 @@ class Ordenador {
     // ===============================
     // AUXILIARES RADIX SORT (RESIDUOS)
     // ===============================
-    void countingSortByDigit(std::uint32_t *A, std::uint32_t n, std::uint32_t exp) const;
+   void countingSortByDigit(std::uint32_t *A, std::uint32_t n, std::uint32_t r, std::uint32_t shift) const;
 
 
     public:

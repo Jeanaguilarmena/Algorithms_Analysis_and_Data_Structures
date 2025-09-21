@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
+#include <cmath>
 
 //METODOS PRIVADOS
 
@@ -107,27 +108,32 @@ std::uint32_t Ordenador::partition(std::uint32_t *A, std::uint32_t low, std::uin
 // ===============================
 // AUXILIARES RADIX SORT (RESIDUOS)
 // ===============================
-void Ordenador::countingSortByDigit(std::uint32_t *A, std::uint32_t n, std::uint32_t exp) const {
+void Ordenador::countingSortByDigit(std::uint32_t *A, std::uint32_t n, std::uint32_t r, std::uint32_t shift) const {
+    std::uint32_t k = 1u << r;
     std::vector<std::uint32_t> output(n);
-    std::uint32_t count[10] = {0};
+    std::vector<std::uint32_t> count(k, 0);
 
+    // Contar ocurrencias de los r bits
     for (std::uint32_t i = 0; i < n; i++) {
-        count[(A[i] / exp) % 10]++;
+        std::uint32_t digit = (A[i] >> shift) & (k - 1);
+        count[digit]++;
     }
 
-    for (std::uint32_t i = 1; i < 10; i++) {
+    // Acumulado
+    for (std::uint32_t i = 1; i < k; i++)
         count[i] += count[i - 1];
-    }
 
+    // Ordenar establemente
     for (std::int32_t i = n - 1; i >= 0; i--) {
-        output[count[(A[i] / exp) % 10] - 1] = A[i];
-        count[(A[i] / exp) % 10]--;
+        std::uint32_t digit = (A[i] >> shift) & (k - 1);
+        output[--count[digit]] = A[i];
     }
 
-    for (std::uint32_t i = 0; i < n; i++) {
+    // Copiar al arreglo original
+    for (std::uint32_t i = 0; i < n; i++)
         A[i] = output[i];
-    } 
-}   
+}
+
 
 //METODOS PUBLICOS
 
@@ -219,15 +225,23 @@ void Ordenador::countingSortByDigit(std::uint32_t *A, std::uint32_t n, std::uint
     // ORDENAMIENTO POR RESIDUOS (RADIX SORT)
     // ===============================
     void Ordenador::ordenamientoPorResiduos(std::uint32_t *A, std::uint32_t n) const {
-        // encontrar el máximo
-        std::uint32_t maxVal = A[0];
-        for (std::uint32_t i = 1; i < n; i++) {
-            if (A[i] > maxVal) maxVal = A[i];
-        }
 
-        // aplicar counting sort por cada dígito
-        for (std::uint32_t exp = 1; maxVal / exp > 0; exp *= 10) {
-            countingSortByDigit(A, n, exp);
+        //Voy a comentarlo por ahora
+        // std::uint32_t r = static_cast<std::uint32_t>(std::floor(std::log2(n))); // Generar el r aplicando la formula
+
+        std::uint32_t maxVal = A[0];
+        for (std::uint32_t i = 1; i < n; i++)
+            if (A[i] > maxVal) maxVal = A[i];
+    
+        std::uint32_t r = 16; //Acá cambio el valor de r para probar
+        cout << "r= " << r;
+    
+        std::uint32_t b = 32; 
+        std::uint32_t d = (b + r - 1) / r; // Le aplico la formula para calcular el d
+    
+        for (std::uint32_t i = 0; i < d; i++) {
+            std::uint32_t shift = i * r;
+            countingSortByDigit(A, n, r, shift);
         }
     }
     
