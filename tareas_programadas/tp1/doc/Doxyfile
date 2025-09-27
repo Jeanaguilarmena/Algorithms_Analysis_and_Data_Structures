@@ -1,0 +1,55 @@
+# Doxyfile 1.9.7
+
+# Proyecto
+PROJECT_NAME           = "Proyecto Programado 1 - Análisis de Algoritmos"
+PROJECT_BRIEF          = "Implementación y análisis de algoritmos de ordenamiento en C++"
+PROJECT_LOGO           = 
+OUTPUT_DIRECTORY       = docs
+CREATE_SUBDIRS         = NO
+
+# Archivos a documentar
+INPUT                  = ./source
+FILE_PATTERNS          = *.hpp *.cpp
+RECURSIVE              = NO
+EXCLUDE                = 
+EXCLUDE_PATTERNS       = 
+EXCLUDE_SYMBOLS        = 
+
+# Generación de salida
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+HTML_FILE_EXTENSION    = .html
+GENERATE_LATEX         = YES
+LATEX_OUTPUT           = latex
+GENERATE_RTF           = NO
+GENERATE_MAN           = NO
+GENERATE_XML           = NO
+
+# Optimización para C++
+OPTIMIZE_OUTPUT_FOR_C  = NO
+OPTIMIZE_OUTPUT_JAVA   = NO
+OPTIMIZE_OUTPUT_VHDL   = NO
+
+# Documentación de miembros privados
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = YES
+EXTRACT_STATIC         = YES
+
+# Documentación de comentarios especiales
+MARKDOWN_SUPPORT       = YES
+AUTOLINK_SUPPORT       = YES
+
+# Diagramas (requiere Graphviz)
+HAVE_DOT               = YES
+DOT_PATH               = /usr/bin/dot
+CLASS_DIAGRAMS         = YES
+COLLABORATION_GRAPH    = YES
+INCLUDE_GRAPH          = YES
+INCLUDED_BY_GRAPH      = YES
+CALL_GRAPH             = YES
+CALLER_GRAPH           = YES
+DOT_IMAGE_FORMAT       = png
+INTERACTIVE_SVG        = NO
+
+# Proyecto de autores
+ALIASES                = "author=Jean Aguilar Mena"
