@@ -15,15 +15,13 @@ using namespace std;
  * @param maxValue Valor máximo posible de los números generados.
  * @return std::vector<uint32_t> Arreglo con números aleatorios.
  */
-std::vector<std::uint32_t> generarArrayRandom(std::uint32_t size, std::uint32_t maxValue) {
+std::vector<std::uint32_t> generarArrayRandom(std::uint32_t size) {
     std::vector<std::uint32_t> array(size);
-
-    // Semilla para generación de números aleatorios
     std::random_device rd;
-    std::mt19937 gen(rd());  
-    std::uniform_int_distribution<std::uint32_t> dis(1, maxValue);
+    std::mt19937 gen(rd());
+    // Rango completo de uint32_t
+    std::uniform_int_distribution<std::uint32_t> dis(0, std::numeric_limits<std::uint32_t>::max());
 
-    // Llenar el arreglo con números aleatorios
     for (std::uint32_t i = 0; i < size; ++i) {
         array[i] = dis(gen);
     }
@@ -74,37 +72,41 @@ vector<uint32_t> cargarArrayTXT(const string& filename) {
 
 
 int main() {
-    Ordenador algoritmos = Ordenador();
 
-    vector<uint32_t> array = cargarArrayTXT("array4.txt");
-
-    auto start = chrono::high_resolution_clock::now();
-
-    algoritmos.ordenamientoPorResiduos(array.data(), array.size());
-
-    auto end = chrono::high_resolution_clock::now();
-
-
-    auto duracion    = chrono::duration_cast<chrono::microseconds>(end - start).count();
-    auto duracion_ms = chrono::duration_cast<chrono::milliseconds>(end - start).count();
-    auto duracion_s  = chrono::duration_cast<chrono::seconds>(end - start).count();
-    
-    cout << endl << "=============================================================" << endl;
-    cout << "                REPORTE DE ORDENAMIENTO" << endl;
-    cout << "=============================================================" << endl;
-    cout << left << setw(35) << "Algoritmo:" << "Ordenamiento por Residuos" << endl;
-    cout << left << setw(35) << "Longitud del array:" << array.size() << " elementos" << endl;
-    cout << left << setw(35) << "Rango de numeros:" << "1 - 10000" << endl;
-    cout << left << setw(35) << "Duración total:" << duracion << " microsegundos" << endl;
-    cout << left << setw(35) << "Duración total:" << duracion_ms << " milisegundos" << endl;
-    cout << left << setw(35) << "Duración total:" << duracion_s << " segundos" << endl;
-    cout << "=============================================================" << endl << endl; 
-  
-    
-    // OPCIONAL:
     // Generar un arreglo aleatorio grande y guardarlo en archivo:
-    // std::vector<uint32_t> array1 = generarArrayRandom(1000000, 1000000);
-    // guardarArrayTXT(array1, "array4.txt");
+    std::vector<uint32_t> array1 = generarArrayRandom(1000000);
+    guardarArrayTXT(array1, "array4.txt");
+
+    //Descomentar para probar los algoritmos de ordenamiento:
+
+    // Ordenador algoritmos = Ordenador();
+    // string datos = algoritmos.ImprimirDatosDeTarea();
+    // cout << datos << endl;
+
+    // vector<uint32_t> array = cargarArrayTXT("array4.txt");
+
+    // auto start = chrono::high_resolution_clock::now();
+
+    // algoritmos.ordenamientoPorResiduos(array.data(), array.size());
+
+    // auto end = chrono::high_resolution_clock::now();
+
+
+    // auto duracion    = chrono::duration_cast<chrono::microseconds>(end - start).count();
+    // auto duracion_ms = chrono::duration_cast<chrono::milliseconds>(end - start).count();
+    // auto duracion_s  = chrono::duration_cast<chrono::seconds>(end - start).count();
+
+    // cout << endl << "=============================================================" << endl;
+    // cout << "                REPORTE DE ORDENAMIENTO" << endl;
+    // cout << "=============================================================" << endl;
+    // cout << left << setw(35) << "Algoritmo:" << "Ordenamiento por Residuos" << endl;
+    // cout << left << setw(35) << "Longitud del array:" << array.size() << " elementos" << endl;
+    // cout << left << setw(35) << "Rango de numeros:" << "1 - 10000" << endl;
+    // cout << left << setw(35) << "Duración total:" << duracion << " microsegundos" << endl;
+    // cout << left << setw(35) << "Duración total:" << duracion_ms << " milisegundos" << endl;
+    // cout << left << setw(35) << "Duración total:" << duracion_s << " segundos" << endl;
+    // cout << "=============================================================" << endl << endl; 
+
     
     return 0;
 }

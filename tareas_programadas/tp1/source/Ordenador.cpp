@@ -6,6 +6,11 @@
 #include <cmath>
 
 //METODOS PRIVADOS
+//La documentación de cada método está en el .hpp
+
+//==============================
+// AUXILIARES MERGESORT
+//==============================
 
 void Ordenador::mergeSortAux(std::uint32_t *A, std::uint32_t left, std::uint32_t right) const {
     if (left < right) {
@@ -21,16 +26,15 @@ void Ordenador::merge(std::uint32_t *A, std::uint32_t left, std::uint32_t mid, s
     std::uint32_t n1 = mid - left + 1;
     std::uint32_t n2 = right - mid;
 
-    //Acá creo 2 vectores temporales
     std::vector<std::uint32_t> L(n1), R(n2);
-    //Acá copio los datos a los vectores temporales
+
     for (std::uint32_t i = 0; i < n1; i++) {
         L[i] = A[left + i];
     }
     for (std::uint32_t j = 0; j < n2; j++) {
         R[j] = A[mid + 1 + j];
     }
-    // Acá hago la mezcla de los dos vectores temporales
+
     std::uint32_t i = 0, j = 0, k = left;
     while (i < n1 && j < n2) {
         if (L[i] <= R[j]) {
@@ -39,7 +43,6 @@ void Ordenador::merge(std::uint32_t *A, std::uint32_t left, std::uint32_t mid, s
             A[k++] = R[j++];
         }
     }
-    //Estos 2 ciclos son por si quedó algun numero en alguno de los sub arreglos
     while (i < n1) {
         A[k++] = L[i++];
     }
@@ -51,13 +54,12 @@ void Ordenador::merge(std::uint32_t *A, std::uint32_t left, std::uint32_t mid, s
 // ===============================
 // AUXILIARES HEAPSORT
 // ===============================
+
 void Ordenador::heapify(std::uint32_t *A, std::uint32_t n, std::uint32_t i) const {
-    std::uint32_t largest = i; // inicializar el mayor como raíz
-    std::uint32_t left = 2 * i + 1; // hijo izquierdo
-    std::uint32_t right = 2 * i + 2; // hijo derecho
+    std::uint32_t largest = i; 
+    std::uint32_t left = 2 * i + 1; 
+    std::uint32_t right = 2 * i + 2; 
 
-
-    //Aca lo que hago es ver cual es el mayor entre la raiz y los hijos
     if (left < n && A[left] > A[largest]) {
         largest = left;
     }
@@ -65,7 +67,6 @@ void Ordenador::heapify(std::uint32_t *A, std::uint32_t n, std::uint32_t i) cons
         largest = right;
     }
 
-    // Si el mayor no es la raíz, entonces lo intercambio y vuelvo a llamar a heapify de manera recursiva
     if (largest != i) {
         std::swap(A[i], A[largest]);
         heapify(A, n, largest);
@@ -75,33 +76,45 @@ void Ordenador::heapify(std::uint32_t *A, std::uint32_t n, std::uint32_t i) cons
 // ===============================
 // AUXILIARES QUICKSORT
 // ===============================
+
 void Ordenador::quickSortAux(std::uint32_t *A, std::uint32_t low, std::uint32_t high) const {
-    //caso base es cuando low >= high
     if (low < high) {
-        //Se hace este llamado para obtener el pivote del arreglo original
         std::uint32_t pi = partition(A, low, high);
-        // Se hacen llamados recursivos a quicksort para las dos mitades del arreglo
-        if (pi > 0) quickSortAux(A, low, pi - 1); // cuidado underflow
+        if (pi > 0) quickSortAux(A, low, pi - 1); 
         quickSortAux(A, pi + 1, high);
     }
 }
 
 std::uint32_t Ordenador::partition(std::uint32_t *A, std::uint32_t low, std::uint32_t high) const {
-    //En esta implementación estoy eligiendo el último elemento como pivote
+
+    // ===============================
+    // ACÁ PONGO LAS OPCIONES DE PIVOTE, POR DEFECTO MANTENGO LA VERSIÓN ESTÁNDAR
+    // ===============================
+
+    // 1) Último elemento como pivote (versión estándar)
     std::uint32_t pivot = A[high];
-    //En este caso i lo pongo como signed porque puede ser negativo y marca la frontera de los menores al pivote
+
+    // 2) Pivote aleatorio
+    // std::uint32_t randIndex = low + (std::rand() % (high - low + 1));
+    // std::swap(A[randIndex], A[high]);
+    // std::uint32_t pivot = A[high];
+
+    // 3) Media de tres (primero, medio y último)
+    // std::uint32_t mid = low + (high - low) / 2;
+    // if (A[low] > A[mid]) std::swap(A[low], A[mid]);
+    // if (A[low] > A[high]) std::swap(A[low], A[high]);
+    // if (A[mid] > A[high]) std::swap(A[mid], A[high]);
+    // std::swap(A[mid], A[high]);
+    // std::uint32_t pivot = A[high];
     std::int32_t i = low - 1;
 
-    // Recorro el arreglo moviendo los que son menores al pivote a la izquierda
     for (std::uint32_t j = low; j < high; j++) {
         if (A[j] <= pivot) {
             i++;
             std::swap(A[i], A[j]);
         }
     }
-    // Finalmente coloco el pivote en su posición correcta
     std::swap(A[i + 1], A[high]);
-    //Acá retorno la posición del pivote
     return i + 1;
 }
 
@@ -113,23 +126,19 @@ void Ordenador::countingSortByDigit(std::uint32_t *A, std::uint32_t n, std::uint
     std::vector<std::uint32_t> output(n);
     std::vector<std::uint32_t> count(k, 0);
 
-    // Contar ocurrencias de los r bits
     for (std::uint32_t i = 0; i < n; i++) {
         std::uint32_t digit = (A[i] >> shift) & (k - 1);
         count[digit]++;
     }
 
-    // Acumulado
     for (std::uint32_t i = 1; i < k; i++)
         count[i] += count[i - 1];
 
-    // Ordenar establemente
     for (std::int32_t i = n - 1; i >= 0; i--) {
         std::uint32_t digit = (A[i] >> shift) & (k - 1);
         output[--count[digit]] = A[i];
     }
 
-    // Copiar al arreglo original
     for (std::uint32_t i = 0; i < n; i++)
         A[i] = output[i];
 }
@@ -137,97 +146,79 @@ void Ordenador::countingSortByDigit(std::uint32_t *A, std::uint32_t n, std::uint
 
 //METODOS PUBLICOS
 
-// ===============================
+    // ===============================
     // ORDENAMIENTO POR SELECCIÓN
     // ===============================
+
     void Ordenador::ordenamientoPorSeleccion(std::uint32_t *A, std::uint32_t n) const {
-        //Recorro el arreglo n-1 veces
+  
         for (std::uint32_t i = 0; i < n - 1; i++) {
-            //Acá marco i como el índice del mínimo
             std::uint32_t minIdx = i;
-            //Busco si hay algun elemento menor que A[i] en el resto del arreglo y si lo hay actualizo minIdx
             for (std::uint32_t j = i + 1; j < n; j++) {
                 if (A[j] < A[minIdx]) {
                     minIdx = j;
                 }
             }
-            //Acá cambio el elemento en la posición i por el mínimo encontrado
             std::swap(A[i], A[minIdx]);
         }
-        // for (int i = 0; i < n; ++i) {
-        //     cout << A[i] << " ";
-        // }
     }
 
     // ===============================
     // ORDENAMIENTO POR INSERCIÓN
     // ===============================
+
     void Ordenador::ordenamientoPorInserccion(std::uint32_t *A, std::uint32_t n) const {
-        //Recorro el arreglo desde el segundo elemento
+  
         for (std::uint32_t i = 1; i < n; i++) {
-            //Pongo el elemento de la posición i como el key
             std::uint32_t key = A[i];
-            //Pongo j al indice del elemento anterior a i
-            std::int32_t j = i - 1; // signed porque puede ser negativo
-            //Reviso que j sea menor o igual a 0 y si es mayor que key, lo muevo una posición a la derecha
+            std::int32_t j = i - 1; 
             while (j >= 0 && A[j] > key) {
                 A[j + 1] = A[j];
                 j--;
             }
-            //Pongo el key en la posición correcta
             A[j + 1] = key;
         }
-        // for (int i = 0; i < n; ++i) {
-        //     cout << A[i] << " ";
-        // }
     }
 
     // ===============================
     // ORDENAMIENTO POR MEZCLA (MERGESORT)
     // ===============================
+
     void Ordenador::ordenamientoPorMezcla(std::uint32_t *A, std::uint32_t n) const {
         mergeSortAux(A, 0, n - 1);
-        // for (int i = 0; i < n; ++i) {
-        //     cout << A[i] << " ";
-        // }
     }
 
     // ===============================
     // ORDENAMIENTO POR MONTÍCULOS (HEAPSORT)
     // ===============================
+
     void Ordenador::ordenamientoPorMonticulos(std::uint32_t *A, std::uint32_t n) const {
-        // construir heap máximo
         for (std::int32_t i = n / 2 - 1; i >= 0; i--) {
             heapify(A, n, i);
         }
-        // extraer elementos
         for (std::int32_t i = n - 1; i > 0; i--) {
             std::swap(A[0], A[i]);
             heapify(A, i, 0);
         }
-        // for (int i = 0; i < n; ++i) {
-        //     cout << A[i] << " ";
-        // }
     }
 
     // ===============================
     // ORDENAMIENTO RÁPIDO (QUICKSORT)
     // ===============================
+
     void Ordenador::ordenamientoRapido(std::uint32_t *A, std::uint32_t n) const {
         quickSortAux(A, 0, n - 1);
-        // for (int i = 0; i < n; ++i) {
-        //     cout << A[i] << " ";
-        // }
     }
   
 
     // ===============================
     // ORDENAMIENTO POR RESIDUOS (RADIX SORT)
     // ===============================
+
     void Ordenador::ordenamientoPorResiduos(std::uint32_t *A, std::uint32_t n) const {
 
-        //Voy a comentarlo por ahora
-        // std::uint32_t r = static_cast<std::uint32_t>(std::floor(std::log2(n))); // Generar el r aplicando la formula
+        //Generar el r aplicando la fórmula
+        // std::uint32_t r = static_cast<std::uint32_t>(std::floor(std::log2(n))); 
 
         std::uint32_t maxVal = A[0];
         for (std::uint32_t i = 1; i < n; i++)
@@ -237,7 +228,7 @@ void Ordenador::countingSortByDigit(std::uint32_t *A, std::uint32_t n, std::uint
         cout << "r= " << r;
     
         std::uint32_t b = 32; 
-        std::uint32_t d = (b + r - 1) / r; // Le aplico la formula para calcular el d
+        std::uint32_t d = (b + r - 1) / r;
     
         for (std::uint32_t i = 0; i < d; i++) {
             std::uint32_t shift = i * r;

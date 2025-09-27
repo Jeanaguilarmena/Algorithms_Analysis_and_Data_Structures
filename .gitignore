@@ -1,0 +1,29 @@
+# Archivos binarios/ejecutables
+*.exe
+*.out
+*.app
+*.o
+*.obj
+
+# Archivos de depuración
+*.log
+*.tmp
+
+# Archivos generados por el compilador
+*.d
+*.dSYM/
+*.stackdump
+
+# Archivos de VS Code
+.vscode/
+*.code-workspace
+
+# Archivos de datos generados por tu programa
+*.txt
+
+# Carpetas de build (CMake, Make, etc.)
+build/
+cmake-build-*/
+
+# Archivos de sistema (macOS)
+.DS_Store
