@@ -14,8 +14,8 @@ template <typename DataType>
 class BSTreeNode {
  public:
   friend class BSTree<DataType>;
-
   BSTreeNode() = default;
+
 
   BSTreeNode(const DataType &value, BSTreeNode<DataType> *parent = nullptr,
              BSTreeNode<DataType> *left = nullptr,
@@ -50,7 +50,8 @@ class BSTreeNode {
 template <typename DataType>
 class BSTree {
  public:
-  BSTree() = default;
+ //Preguntar al profe si puedo eliminar el default
+  BSTree();
 
   ~BSTree() {};
 
@@ -132,6 +133,17 @@ void BSTreeNode<DataType>::setRight(BSTreeNode<DataType>* right) {
 }
 
 //Implementación del BSTree
+
+template <typename DataType>
+BSTree<DataType>::BSTree() {
+  nil = new RBTreeNode<DataType>();  
+  nil->setColor(BLACK);              
+  nil->setLeft(nil);
+  nil->setRight(nil);
+  nil->setParent(nil);
+  root = nil;                        
+}
+
 
 //No permite insertar elementos duplicados
 template <typename DataType>
