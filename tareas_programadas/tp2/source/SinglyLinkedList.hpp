@@ -3,7 +3,7 @@
  Based on: Prof. Arturo Camacho, Universidad de Costa Rica
  Modified by: Prof. Allan Berrocal, Universidad de Costa Rica
 */
-
+#include <iostream>
 #pragma once
 template <typename DataType>
 class SLList;
@@ -36,9 +36,11 @@ class SLListNode {
 template <typename DataType>
 class SLList {
  public:
-  SLList() = default;
+  // SLList() = default;
+  SLList();
 
-  ~SLList() {};
+  // ~SLList() {};
+  ~SLList();
 
   void insert(const DataType& value);
 
@@ -47,6 +49,8 @@ class SLList {
   void remove(const DataType& value);
 
   SLListNode<DataType>* getNil() const;
+
+  void printList() const;
   
  private:
   SLListNode<DataType>* nil;
@@ -92,11 +96,17 @@ SLList<DataType>::SLList() {
 
 //No permite insertar elementos duplicados e inserta al inicio de la lista
 template <typename DataType>
+// void SLList<DataType>::insert(const DataType& value) {
+//   if (!search(value)) {
+//     SLListNode<DataType>* newNode = new SLListNode<DataType>(value, nil->getNext());
+//     nil->setNext(newNode);
+//   }
+// }
+
 void SLList<DataType>::insert(const DataType& value) {
-  if (!search(value)) {
     SLListNode<DataType>* newNode = new SLListNode<DataType>(value, nil->getNext());
     nil->setNext(newNode);
-  }
+  
 }
 
 template <typename DataType>
@@ -118,9 +128,10 @@ void SLList<DataType>::remove(const DataType& value) {
     if (current->getNext()->getKey() == value) {
       SLListNode<DataType>* nodeToDelete = current->getNext();
       current->setNext(nodeToDelete->getNext());
-      delete nodeToDelete
+      delete nodeToDelete;
       return;
     }
+    current = current->getNext();
   }
 }
 
@@ -137,5 +148,15 @@ SLList<DataType>::~SLList() {
     current = current->getNext();
     delete nodeToDelete;
   }
+}
+
+template <typename DataType>
+void SLList<DataType>::printList() const {
+  SLListNode<DataType>* current = nil->getNext();
+  while (current) {
+    std::cout << current->getKey() << " -> ";
+    current = current->getNext();
+  }
+  std::cout << "nullptr" << std::endl;
 }
 

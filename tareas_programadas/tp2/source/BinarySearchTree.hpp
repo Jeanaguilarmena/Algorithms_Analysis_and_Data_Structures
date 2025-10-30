@@ -136,12 +136,7 @@ void BSTreeNode<DataType>::setRight(BSTreeNode<DataType>* right) {
 
 template <typename DataType>
 BSTree<DataType>::BSTree() {
-  nil = new RBTreeNode<DataType>();  
-  nil->setColor(BLACK);              
-  nil->setLeft(nil);
-  nil->setRight(nil);
-  nil->setParent(nil);
-  root = nil;                        
+  root = nullptr;
 }
 
 
@@ -152,26 +147,29 @@ void BSTree<DataType>::insert(const DataType &value) {
   BSTreeNode<DataType>* parent = nullptr;
   BSTreeNode<DataType>* current = root;
 
-  while(current) {
+  while (current) {
     parent = current;
-    if (value == current->key) {
-      delete newNode;
+    if (value == current->getKey()) {
+      delete newNode;  // no se permiten duplicados
       return;
-    } else if (value < current->value) {
-      current = current->left;
+    } else if (value < current->getKey()) {
+      current = current->getLeft();
     } else {
-      current = current->right;
+      current = current->getRight();
     }
-    newNode->setParent(parent);
   }
-  if (!parent) {
+
+  newNode->setParent(parent);
+
+  if (!parent) {  // el árbol estaba vacío
     root = newNode;
-  } else if (value < newNode->getKey()){
+  } else if (value < parent->getKey()) {
     parent->setLeft(newNode);
   } else {
     parent->setRight(newNode);
   }
 }
+
 
 template <typename DataType>
 BSTreeNode<DataType> *BSTree<DataType>::search(
@@ -223,37 +221,76 @@ BSTreeNode<DataType> *BSTree<DataType>::getRoot() const {
 
 template <typename DataType>
 void BSTree<DataType>::fastInsert(size_t n) {
-  for (size_t i = 1; 1 <= n; i++) {
+  for (size_t i = 1; i <= n; i++) {
     insert(static_cast<DataType>(i));
   }
 }
 
+#include <stack>
+
 template <typename DataType>
 void BSTree<DataType>::inorderWalk(BSTreeNode<DataType>* rootOfSubTree) const {
-  if (rootOfSubTree) {
-    inorderWalk(rootOfSubTree->getLeft());
-    std::cout << rootOfSubTree->getKey() << " ";
-    inorderWalk(rootOfSubTree->getRight());
+  std::stack<BSTreeNode<DataType>*> stack;
+  BSTreeNode<DataType>* current = rootOfSubTree;
+
+  while (current != nullptr || !stack.empty()) {
+    while (current != nullptr) {
+      stack.push(current);
+      current = current->getLeft();
+    }
+
+    current = stack.top();
+    stack.pop();
+    std::cout << current->getKey() << " ";
+
+    current = current->getRight();
   }
 }
 
 template <typename DataType>
 void BSTree<DataType>::preorderWalk(BSTreeNode<DataType>* rootOfSubTree) const {
-  if (rootOfSubTree) {
-    std::cout << rootOfSubTree->getKey() << " ";
-    preorderWalk(rootOfSubTree->getLeft());
-    preorderWalk(rootOfSubTree->getRight());
+  if (!rootOfSubTree) return;
+
+  std::stack<BSTreeNode<DataType>*> stack;
+  stack.push(rootOfSubTree);
+
+  while (!stack.empty()) {
+    BSTreeNode<DataType>* current = stack.top();
+    stack.pop();
+
+    std::cout << current->getKey() << " ";
+
+    if (current->getRight())
+      stack.push(current->getRight());
+    if (current->getLeft())
+      stack.push(current->getLeft());
   }
 }
 
 template <typename DataType>
 void BSTree<DataType>::postorderWalk(BSTreeNode<DataType>* rootOfSubTree) const {
-  if (rootOfSubTree) {
-    postorderWalk(rootOfSubTree->getLeft());
-    postorderWalk(rootOfSubTree->getRight());
-    std::cout << rootOfSubTree->getKey() << " ";
+  if (!rootOfSubTree) return;
+
+  std::stack<BSTreeNode<DataType>*> stack1, stack2;
+  stack1.push(rootOfSubTree);
+
+  while (!stack1.empty()) {
+    BSTreeNode<DataType>* current = stack1.top();
+    stack1.pop();
+    stack2.push(current);
+
+    if (current->getLeft())
+      stack1.push(current->getLeft());
+    if (current->getRight())
+      stack1.push(current->getRight());
+  }
+
+  while (!stack2.empty()) {
+    std::cout << stack2.top()->getKey() << " ";
+    stack2.pop();
   }
 }
+
 
 template <typename DataType> 
 void BSTree<DataType>::remove(const DataType &value) {

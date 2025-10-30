@@ -1,3 +1,3 @@
 constexpr const char* imprimirDatosDeTarea() {
-    return "Carné: 12345, Nombre: ABC, Tarea 2";
+    return "Carné: B70134, Nombre: Jean Freddy Aguilar Mena, Tarea 2";
 }
