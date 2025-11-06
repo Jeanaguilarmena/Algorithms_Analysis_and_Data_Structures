@@ -7,16 +7,17 @@
 #pragma once
 #include <cstdint>
 #include <vector>
-
 #include "DoublyLinkedList.hpp"
 
 template <typename DataType>
 
 class ChainedHashTable {
  public:
-  ChainedHashTable(size_t size) {};
+  // ChainedHashTable(size_t size) {};
+  ChainedHashTable(size_t size);
 
-  ~ChainedHashTable() {};
+  // ~ChainedHashTable() {};
+  ~ChainedHashTable();
 
   void insert(const DataType& value);
 
@@ -25,11 +26,14 @@ class ChainedHashTable {
   void remove(const DataType& value);
 
   size_t getSize() const;
+  size_t getCollisionCount() const;
+  void resetCollisionCount();
 
  private:
   size_t size;
   size_t count;
   std::vector<DLList<DataType>> table;
+  size_t collisionCount;
 
   //Metodos auxiliares
   uint32_t keyFromValue(const DataType& value) const;
@@ -43,6 +47,7 @@ ChainedHashTable<DataType>::ChainedHashTable(size_t size) {
   this->size = size;
   table.resize(size);
   count = 0;
+  collisionCount = 0;
 }
 
 template <typename DataType>
@@ -65,6 +70,10 @@ void ChainedHashTable<DataType>::insert(const DataType& value) {
   uint32_t key = keyFromValue(value);
   size_t index = hashFunction(key);
 
+  if (!table[index].isEmpty()) {
+    collisionCount++;
+  }
+
   // Evita duplicados en la lista de esa posición
   if (!table[index].search(value)) {
     table[index].insert(value);
@@ -76,6 +85,11 @@ template <typename DataType>
 DLListNode<DataType>* ChainedHashTable<DataType>::search(const DataType& value) const {
   uint32_t key = keyFromValue(value);
   size_t index = hashFunction(key);
+
+  if (table[index].size() > 1) {
+    const_cast<ChainedHashTable<DataType>*>(this)->collisionCount++;
+  } 
+
   return table[index].search(value);  // Retorna el puntero al nodo o nullptr
 }
 
@@ -83,6 +97,10 @@ template <typename DataType>
 void ChainedHashTable<DataType>::remove(const DataType& value) {
   uint32_t key = keyFromValue(value);
   size_t index = hashFunction(key);
+
+  if (table[index].size() > 1) {
+    collisionCount++;
+  }
 
   // Elimina el nodo de la lista, si existe
   DLListNode<DataType>* node = table[index].search(value);
@@ -95,4 +113,14 @@ void ChainedHashTable<DataType>::remove(const DataType& value) {
 template <typename DataType>
 size_t ChainedHashTable<DataType>::getSize() const {
   return count;
+}
+
+template <typename DataType>
+size_t ChainedHashTable<DataType>::getCollisionCount() const {
+  return collisionCount;
+}
+
+template <typename DataType>
+void ChainedHashTable<DataType>::resetCollisionCount() {
+  collisionCount = 0;
 }

@@ -5,6 +5,7 @@
  */
 
 #pragma once
+#include <cstddef>
 template <typename DataType>
 class DLList;
 
@@ -43,9 +44,11 @@ class DLListNode {
 template <typename DataType>
 class DLList {
  public:
-  DLList() = default;
+//   DLList() = default;
+    DLList();
 
-  ~DLList() {};
+//   ~DLList() {};
+    ~DLList();
 
   void insert(const DataType& value);
 
@@ -56,6 +59,9 @@ class DLList {
   void remove(DLListNode<DataType>* node);
 
   DLListNode<DataType>* getNil() const;
+
+  bool isEmpty() const;
+  size_t size() const;
 
  private:
   DLListNode<DataType>* nil;
@@ -174,3 +180,20 @@ template <typename DataType>
 DLListNode<DataType>* DLList<DataType>::getNil() const {
     return nil;
 }
+
+template <typename DataType>
+bool DLList<DataType>::isEmpty() const {
+    return nil->getNext() == nullptr;
+}
+
+template <typename DataType>
+size_t DLList<DataType>::size() const {
+    size_t count = 0;
+    DLListNode<DataType>* current = nil->getNext();
+    while (current) {
+        count++;
+        current = current->getNext();
+    }
+    return count;
+}
+

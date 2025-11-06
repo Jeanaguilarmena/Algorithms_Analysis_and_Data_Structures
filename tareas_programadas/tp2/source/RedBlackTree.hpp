@@ -63,7 +63,8 @@ class RBTree {
 
   RBTree();
 
-  ~RBTree() {}
+  // ~RBTree() {}
+  ~RBTree();
 
   void insert(const DataType &value);
 
@@ -180,7 +181,7 @@ RBTreeNode<DataType>* RBTree<DataType>::getNil() const {
 template <typename DataType>
 RBTreeNode<DataType>* RBTree<DataType>::search(
     const RBTreeNode<DataType>* rootOfSubtree, const DataType &value) const {
-      while (rootOfSubtree && value != rootOfSubtree->getKey()) {
+      while (rootOfSubtree != nil && value != rootOfSubtree->getKey()) {
         if (value < rootOfSubtree->getKey()) {
           rootOfSubtree = rootOfSubtree->getLeft();
         } else {
@@ -193,8 +194,8 @@ RBTreeNode<DataType>* RBTree<DataType>::search(
 template <typename DataType>
 RBTreeNode<DataType>* RBTree<DataType>::getMinimum(
     const RBTreeNode<DataType>* rootOfSubTree) const {
-      while (rootOfSubTree && rootOfSubTree->getLeft()) {
-        rootOfSubTree = rootOfSubTree->getLeft()
+      while (rootOfSubTree != nil && rootOfSubTree->getLeft() != nil) {
+        rootOfSubTree = rootOfSubTree->getLeft();
       }
       return const_cast<RBTreeNode<DataType>*>(rootOfSubTree);
     }
@@ -203,8 +204,8 @@ template <typename DataType>
 
 RBTreeNode<DataType>* RBTree<DataType>::getMaximum(
   const RBTreeNode<DataType>* rootOfSubTree) const {
-    while (rootOfSubTree && rootOfSubTree->getRight()) {
-      rootOfSubTree = rootOfSubTree->getRight()
+    while (rootOfSubTree != nil && rootOfSubTree->getRight() != nil) {
+      rootOfSubTree = rootOfSubTree->getRight();
     }
     return const_cast<RBTreeNode<DataType>*>(rootOfSubTree);
   }
@@ -212,11 +213,11 @@ RBTreeNode<DataType>* RBTree<DataType>::getMaximum(
 template <typename DataType>
 RBTreeNode<DataType>* RBTree<DataType>::getSuccessor(
     const RBTreeNode<DataType>* node) const {
-      if (node->getRight()) {
+      if (node->getRight() != nil) {
         return getMinimum(node->getRight());
       }
       RBTreeNode<DataType>* parent = node->getParent();
-      while (parent && node == parent->getRight()) {
+      while (parent != nil && node == parent->getRight()) {
         node = parent;
         parent = parent->getParent();
       }
@@ -358,11 +359,11 @@ void RBTree<DataType>::transplant(RBTreeNode<DataType>* u, RBTreeNode<DataType>*
 template <typename DataType>
 void RBTree<DataType>::remove(const DataType &value) {
     RBTreeNode<DataType>* z = search(root, value);
-    if (z == nil) return;
+    if (z == nil) return;  // no existe
 
     RBTreeNode<DataType>* y = z;
-    enum colors yOriginalColor = y->color;
-    RBTreeNode<DataType>* x = nullptr;
+    auto yOriginalColor = y->color;
+    RBTreeNode<DataType>* x = nil;
 
     if (z->getLeft() == nil) {
         x = z->getRight();
@@ -374,6 +375,7 @@ void RBTree<DataType>::remove(const DataType &value) {
         y = getMinimum(z->getRight());
         yOriginalColor = y->color;
         x = y->getRight();
+
         if (y->getParent() != z) {
             transplant(y, y->getRight());
             y->setRight(z->getRight());
@@ -381,18 +383,19 @@ void RBTree<DataType>::remove(const DataType &value) {
         } else {
             x->setParent(y);
         }
+
         transplant(z, y);
         y->setLeft(z->getLeft());
         y->getLeft()->setParent(y);
-        y->setColor(z->color);
+        y->color = z->color;
     }
 
-    if (yOriginalColor == BLACK) {
+    if (yOriginalColor == BLACK)
         deleteFixup(x);
-    }
 
     delete z;
 }
+
 
 template <typename DataType>
 void RBTree<DataType>::deleteFixup(RBTreeNode<DataType>* x) {
@@ -449,3 +452,30 @@ void RBTree<DataType>::deleteFixup(RBTreeNode<DataType>* x) {
     }
     x->setColor(BLACK);
 }
+
+template <typename DataType>
+RBTree<DataType>::~RBTree() {
+    if (root == nil) {
+        delete nil;
+        return;
+    }
+
+    std::stack<RBTreeNode<DataType>*> stack;
+    stack.push(root);
+
+    while (!stack.empty()) {
+        RBTreeNode<DataType>* node = stack.top();
+        stack.pop();
+
+        if (node->getLeft() != nil)
+            stack.push(node->getLeft());
+        if (node->getRight() != nil)
+            stack.push(node->getRight());
+
+        delete node;
+    }
+
+    delete nil;
+}
+
+

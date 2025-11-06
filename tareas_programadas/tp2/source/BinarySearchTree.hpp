@@ -49,6 +49,8 @@ class BSTreeNode {
 
 template <typename DataType>
 class BSTree {
+  private:
+    BSTreeNode<DataType>* buildBalancedTree(long long start, long long end, BSTreeNode<DataType>* parent);
  public:
  //Preguntar al profe si puedo eliminar el default
   BSTree();
@@ -221,10 +223,26 @@ BSTreeNode<DataType> *BSTree<DataType>::getRoot() const {
 
 template <typename DataType>
 void BSTree<DataType>::fastInsert(size_t n) {
-  for (size_t i = 1; i <= n; i++) {
-    insert(static_cast<DataType>(i));
-  }
+  if (n == 0) { root = nullptr; return; }
+  root = buildBalancedTree(0LL, static_cast<long long>(n) - 1LL, nullptr);
 }
+
+template <typename DataType>
+BSTreeNode<DataType>* BSTree<DataType>::buildBalancedTree(long long start, long long end, BSTreeNode<DataType>* parent) {
+    if (start > end) return nullptr;
+
+    long long mid = start + (end - start) / 2; // evita overflow (buena práctica)
+    BSTreeNode<DataType>* node = new BSTreeNode<DataType>(static_cast<DataType>(mid));
+    node->setParent(parent);
+
+    node->setLeft(buildBalancedTree(start, mid - 1, node));
+    node->setRight(buildBalancedTree(mid + 1, end, node));
+
+    return node;
+}
+
+
+
 
 #include <stack>
 
