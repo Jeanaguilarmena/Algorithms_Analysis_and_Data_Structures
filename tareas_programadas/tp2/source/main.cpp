@@ -15,7 +15,9 @@ int main() {
     printer.printRedBlackTreeData();
     printer.printChainedHashTableData();
     printer.printOpenAddressHashTableData();
-    
+    std::string student = imprimirDatosDeTarea();
+    std::cout << student << std::endl;
+
     return 0;
 }
 

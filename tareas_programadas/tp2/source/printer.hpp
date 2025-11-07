@@ -21,8 +21,10 @@ class Printer {
 template <typename DataType>
 void Printer<DataType>::printSinglyLinkedListData() {
     std::cout << "=============== Singly Linked List ===============" << std::endl;
-    const int n = 10000;
-    const int e = 100;
+    // const int n = 1000000; //Si se quiere probar con el tamaño original, descomentar estas líneas
+    // const int e = 10000;
+    const int n = 100000; //Voy a dejar estos para que en caso de prueba, no tarde tanto
+    const int e = 1000;
 
     SLList<int> list;
     
