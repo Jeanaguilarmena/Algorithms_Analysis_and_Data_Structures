@@ -105,9 +105,7 @@ void DLListNode<DataType>::setPrev(DLListNode<DataType>* prev) {
     this->prev = prev;
 }
 
-// ------------------ DLList ------------------
 
-// Constructor de la lista: crea el nodo centinela
 template <typename DataType>
 DLList<DataType>::DLList() {
     nil = new DLListNode<DataType>();
@@ -115,7 +113,7 @@ DLList<DataType>::DLList() {
     nil->setPrev(nullptr);
 }
 
-// Destructor: elimina todos los nodos
+
 template <typename DataType>
 DLList<DataType>::~DLList() {
     DLListNode<DataType>* current = nil;
@@ -126,7 +124,6 @@ DLList<DataType>::~DLList() {
     }
 }
 
-// Insertar al inicio (no permite duplicados)
 template <typename DataType>
 void DLList<DataType>::insert(const DataType& value) {
     if (!search(value)) {
@@ -139,7 +136,6 @@ void DLList<DataType>::insert(const DataType& value) {
     }
 }
 
-// Buscar nodo por valor
 template <typename DataType>
 DLListNode<DataType>* DLList<DataType>::search(const DataType& value) const {
     DLListNode<DataType>* current = nil->getNext();
@@ -152,7 +148,7 @@ DLListNode<DataType>* DLList<DataType>::search(const DataType& value) const {
     return nullptr;
 }
 
-// Eliminar por valor
+
 template <typename DataType>
 void DLList<DataType>::remove(const DataType& value) {
     DLListNode<DataType>* node = search(value);
@@ -161,7 +157,6 @@ void DLList<DataType>::remove(const DataType& value) {
     }
 }
 
-// Eliminar por nodo
 template <typename DataType>
 void DLList<DataType>::remove(DLListNode<DataType>* node) {
     if (!node) return;
@@ -175,7 +170,6 @@ void DLList<DataType>::remove(DLListNode<DataType>* node) {
     delete node;
 }
 
-// Obtener el nodo centinela
 template <typename DataType>
 DLListNode<DataType>* DLList<DataType>::getNil() const {
     return nil;

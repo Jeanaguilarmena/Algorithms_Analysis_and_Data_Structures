@@ -359,7 +359,7 @@ void RBTree<DataType>::transplant(RBTreeNode<DataType>* u, RBTreeNode<DataType>*
 template <typename DataType>
 void RBTree<DataType>::remove(const DataType &value) {
     RBTreeNode<DataType>* z = search(root, value);
-    if (z == nil) return;  // no existe
+    if (z == nil) return;
 
     RBTreeNode<DataType>* y = z;
     auto yOriginalColor = y->color;

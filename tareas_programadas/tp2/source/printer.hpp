@@ -1,6 +1,8 @@
 //Esta es una clase para imprimir todos los elementos de las estructuras de datos especificas y no tenerlo todo 
 //en el main
-
+#include "SinglyLinkedList.hpp"
+#include "BinarySearchTree.hpp"
+#include "RedBlackTree.hpp"
 #include "ChainedHashTable.hpp"
 #include "OpenAddressHashTable.hpp"
 #include <iostream>
@@ -312,4 +314,5 @@ void Printer<DataType>::printOpenAddressHashTableData() {
 
     std::cout << "===============================================================" << std::endl;
     std::cout << std::endl;
+
 }

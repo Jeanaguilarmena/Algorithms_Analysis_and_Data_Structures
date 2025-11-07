@@ -142,7 +142,6 @@ BSTree<DataType>::BSTree() {
 }
 
 
-//No permite insertar elementos duplicados
 template <typename DataType>
 void BSTree<DataType>::insert(const DataType &value) {
   BSTreeNode<DataType>* newNode = new BSTreeNode<DataType>(value);
@@ -152,7 +151,7 @@ void BSTree<DataType>::insert(const DataType &value) {
   while (current) {
     parent = current;
     if (value == current->getKey()) {
-      delete newNode;  // no se permiten duplicados
+      delete newNode;  
       return;
     } else if (value < current->getKey()) {
       current = current->getLeft();
@@ -163,7 +162,7 @@ void BSTree<DataType>::insert(const DataType &value) {
 
   newNode->setParent(parent);
 
-  if (!parent) {  // el árbol estaba vacío
+  if (!parent) {  
     root = newNode;
   } else if (value < parent->getKey()) {
     parent->setLeft(newNode);
@@ -231,7 +230,7 @@ template <typename DataType>
 BSTreeNode<DataType>* BSTree<DataType>::buildBalancedTree(long long start, long long end, BSTreeNode<DataType>* parent) {
     if (start > end) return nullptr;
 
-    long long mid = start + (end - start) / 2; // evita overflow (buena práctica)
+    long long mid = start + (end - start) / 2; 
     BSTreeNode<DataType>* node = new BSTreeNode<DataType>(static_cast<DataType>(mid));
     node->setParent(parent);
 
@@ -313,7 +312,7 @@ void BSTree<DataType>::postorderWalk(BSTreeNode<DataType>* rootOfSubTree) const 
 template <typename DataType> 
 void BSTree<DataType>::remove(const DataType &value) {
   BSTreeNode<DataType> *nodeToDelete = search(root, value);
-  if (!nodeToDelete) return;  // no existe
+  if (!nodeToDelete) return;  
 
   if (nodeToDelete->getLeft() == nullptr)
     transplant(nodeToDelete, nodeToDelete->getRight());

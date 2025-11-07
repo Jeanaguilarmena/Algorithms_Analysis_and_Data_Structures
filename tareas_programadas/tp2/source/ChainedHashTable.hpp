@@ -13,11 +13,11 @@ template <typename DataType>
 
 class ChainedHashTable {
  public:
-  // ChainedHashTable(size_t size) {};
+  // ChainedHashTable(size_t size) {}; // Cambie el constructor, para agregar la definición
   ChainedHashTable(size_t size);
 
   // ~ChainedHashTable() {};
-  ~ChainedHashTable();
+  ~ChainedHashTable(); // Cambie el destructor, para agregar la definición
 
   void insert(const DataType& value);
 
@@ -53,13 +53,12 @@ ChainedHashTable<DataType>::ChainedHashTable(size_t size) {
 template <typename DataType>
 ChainedHashTable<DataType>::~ChainedHashTable() {}
 
-// Convierte el valor a una llave entera (asume tipo numérico)
+
 template <typename DataType>
 uint32_t ChainedHashTable<DataType>::keyFromValue(const DataType& value) const {
   return (uint32_t)value;
 }
 
-// h(k) = k mod m
 template <typename DataType>
 size_t ChainedHashTable<DataType>::hashFunction(uint32_t key) const {
   return key % size;
@@ -74,7 +73,6 @@ void ChainedHashTable<DataType>::insert(const DataType& value) {
     collisionCount++;
   }
 
-  // Evita duplicados en la lista de esa posición
   if (!table[index].search(value)) {
     table[index].insert(value);
     count++;
@@ -90,7 +88,7 @@ DLListNode<DataType>* ChainedHashTable<DataType>::search(const DataType& value) 
     const_cast<ChainedHashTable<DataType>*>(this)->collisionCount++;
   } 
 
-  return table[index].search(value);  // Retorna el puntero al nodo o nullptr
+  return table[index].search(value);  
 }
 
 template <typename DataType>
@@ -102,7 +100,6 @@ void ChainedHashTable<DataType>::remove(const DataType& value) {
     collisionCount++;
   }
 
-  // Elimina el nodo de la lista, si existe
   DLListNode<DataType>* node = table[index].search(value);
   if (node) {
     table[index].remove(node);
